@@ -1,7 +1,6 @@
 package co.edu.uniquindio.poo.model;
+
 import java.util.Arrays;
-import java.util.List;
-import java.util.ArrayList;
 
 public class Estudiante {
     private String nombres;
@@ -10,20 +9,21 @@ public class Estudiante {
     private byte edad;
     private String correo;
     private String telefono;
-    //Relaciones
+
     private Curso ownedByCurso;
     private Nota[] listaNotas;
 
 
-    public Estudiante(String nombres, String apellidos, String identificacion, byte edad, String correo, String telefono, Curso ownedByCurso){
-        this.nombres=nombres;
-        this.apellidos= apellidos;
-        this.identificacion=identificacion;
-        this.edad=edad;
-        this.correo=correo;
-        this.telefono=telefono;
-        this.ownedByCurso= ownedByCurso;
-        this.listaNotas= new Nota[5];
+    public Estudiante(String nombres, String apellidos, String identificacion,
+                      byte edad, String correo, String telefono, Curso ownedByCurso){
+        this.nombres = nombres;
+        this.apellidos = apellidos;
+        this.edad = edad;
+        this.identificacion = identificacion;
+        this.correo = correo;
+        this.telefono = telefono;
+        this.ownedByCurso = ownedByCurso;
+        this.listaNotas = new Nota[5];
     }
 
     public String getNombres() {
@@ -99,8 +99,54 @@ public class Estudiante {
                 ", edad=" + edad +
                 ", correo='" + correo + '\'' +
                 ", telefono='" + telefono + '\'' +
-                ", ownedByCurso=" + ownedByCurso +
                 ", listaNotas=" + Arrays.toString(listaNotas) +
                 '}';
     }
+
+    public String registrarNota(String nombreNota, float valorNota) {
+        Nota notaEncontrada = buscarNota(nombreNota);
+        if(notaEncontrada != null){
+            return "NO se puede registra la nota, ya existe";
+        }else{
+            int posicionDisponible = buscarPosicionDisponible();// esto restoran -1 para el caso que no exista una posicion disponible
+            if(posicionDisponible == 200){
+                return "Lo siento no se puede agregar mas notas ya tiene las 5 notas";
+            }else{
+                Nota nuevaNota = new Nota(nombreNota,valorNota);
+                listaNotas[posicionDisponible] = nuevaNota;// listaEstdinates.add
+                return "Nota regitrada exitosamente";
+            }
+        }
+    }
+
+    private int buscarPosicionDisponible() {
+
+        for (int i = 0; i < listaNotas.length; i++) {
+            if(listaNotas[i] == null){
+                return i;
+            }
+        }
+        return 200;// significa que no hay espacio
+    }
+
+    public Nota buscarNota(String nombreNota){
+        for (Nota notaAux : listaNotas){
+            if(notaAux != null && notaAux.getNombre().equals(nombreNota)){
+                return notaAux;
+            }
+        }
+        return null;
+    }
+    public double calcularDefinitiva(){
+        int suma=0;
+        int contador=0;
+        for (int i=0; i<listaNotas.length; i++){
+            if (listaNotas[i] != null){
+                suma+=listaNotas[i].getValor();
+            }
+        }
+        return suma/contador;
+    }
+
+
 }
